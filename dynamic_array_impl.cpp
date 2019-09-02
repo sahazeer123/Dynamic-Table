@@ -13,6 +13,7 @@ private:
     double decrease_factor;
 
 public:
+    double load_factor;
     dynamic_array_implementation();
     int get_size();
     int get_capacity();
@@ -30,6 +31,7 @@ dynamic_array_implementation::dynamic_array_implementation()
     capacity = 0;
     increase_factor = 2;
     decrease_factor = 0.25;
+    load_factor = 1;
 }
 int dynamic_array_implementation::get_size()
 {
@@ -42,21 +44,20 @@ int dynamic_array_implementation::get_capacity()
 
 void dynamic_array_implementation::set_increase_factor_table_size(double increase_factor)
 {
-    if(capacity == 0)
-        capacity = 1;
-    else
-        capacity = capacity * increase_factor;
+    this -> increase_factor = increase_factor;
 }
 void dynamic_array_implementation::set_load_factor_reduction(double decrease_factor)
 {
-    return;
+    this -> decrease_factor = decrease_factor;
 }
-
 void dynamic_array_implementation::append(int element)
 {
     if(size == capacity)
     {
-        set_increase_factor_table_size(increase_factor);
+        if(capacity == 0)
+            capacity = 1;
+        else
+            capacity = capacity * increase_factor;
         int *newArr = new int[capacity];
         for(int i = 0;i < size;i++)
             newArr[i] = arr[i];
@@ -64,11 +65,26 @@ void dynamic_array_implementation::append(int element)
         arr = newArr;
     }
     arr[size++] = element;
+    load_factor = ((double)size / (double)capacity);
 }
 
 void dynamic_array_implementation::pop()
 {
-    return;
+    if(size == 0)
+        return ;
+    size--;
+    load_factor = ((double)size / (double)capacity);
+    if(capacity == 0)
+        load_factor = 1;
+    if(load_factor <= decrease_factor)
+    {
+        capacity = 0.5 * capacity;
+        int *newArr = newArr = new int[capacity];
+        for(int i = 0;i < size;i++)
+            newArr[i] = arr[i];
+        delete [] arr;
+        arr = newArr;
+    }
 }
 int dynamic_array_implementation::get(int index)
 {
