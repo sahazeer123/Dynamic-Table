@@ -78,7 +78,7 @@ void dynamic_array_implementation::pop()
         load_factor = 1;
     if(load_factor <= decrease_factor)
     {
-        capacity = 0.5 * capacity;
+        capacity = 2 *0.5 * capacity;
         int *newArr = newArr = new int[capacity];
         for(int i = 0;i < size;i++)
             newArr[i] = arr[i];
