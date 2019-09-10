@@ -13,7 +13,6 @@ private:
     double decrease_factor;
 
 public:
-    double load_factor;
     dynamic_array_implementation();
     int get_size();
     int get_capacity();
@@ -31,7 +30,6 @@ dynamic_array_implementation::dynamic_array_implementation()
     capacity = 0;
     increase_factor = 2;
     decrease_factor = 0.25;
-    load_factor = 1;
 }
 int dynamic_array_implementation::get_size()
 {
@@ -65,7 +63,6 @@ void dynamic_array_implementation::append(int element)
         arr = newArr;
     }
     arr[size++] = element;
-    load_factor = ((double)size / (double)capacity);
 }
 
 void dynamic_array_implementation::pop()
@@ -73,12 +70,9 @@ void dynamic_array_implementation::pop()
     if(size == 0)
         return ;
     size--;
-    load_factor = ((double)size / (double)capacity);
-    if(capacity == 0)
-        load_factor = 1;
-    if(load_factor <= decrease_factor)
+    if(size <= decrease_factor * capacity)
     {
-        capacity = 2 *0.5 * capacity;
+        capacity = increase_factor * capacity * decrease_factor;
         int *newArr = newArr = new int[capacity];
         for(int i = 0;i < size;i++)
             newArr[i] = arr[i];
